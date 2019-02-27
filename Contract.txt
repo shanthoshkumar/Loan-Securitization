@@ -1,0 +1,214 @@
+pragma solidity ^0.4.24;
+
+contract Loan
+{
+    address public issuer;
+    
+    constructor() public payable
+    {
+        issuer = msg.sender;
+    }
+    
+    uint256 public bank_ids;
+    struct bank_details
+    {
+        bytes bank_name;
+        uint256[] borrower_ids;
+    }
+    mapping(uint256 => bank_details) public bank_detail_map;//bank_ids
+    function add_bank(bytes _bank_name) public payable returns(uint256)
+    {
+        require(issuer == msg.sender);
+        bank_ids += 1;
+        bank_detail_map[bank_ids].bank_name = _bank_name;
+        return bank_ids;
+    }
+    
+    uint256 public borrower_ids;
+    
+    struct borrower
+    {
+        bytes borrower_name;
+    }
+    mapping(uint256 => borrower) public borrower_map;//borrower_ids
+    function add_borrower(uint256 bank_id, bytes _borrower_name) public payable returns(uint256)
+    {
+        require(issuer == msg.sender);
+        borrower_ids +=1;
+        borrower_map[borrower_ids].borrower_name = _borrower_name;
+        bank_detail_map[bank_id].borrower_ids.push(borrower_ids);
+        
+        return borrower_ids;
+    }
+    
+    function show_borrower(uint256 bank_id) public constant returns(uint256[])
+    {
+        return bank_detail_map[bank_id].borrower_ids;
+    }
+    uint256 public loan_ids;
+    struct borrower_details
+    {
+        uint256 borrower_id;
+        uint256 loan_amount;
+        uint256 interest_rate;
+        uint256 loan_duration;
+        uint256 asset_id;
+        bytes asset_details;
+        uint256 asset_amount;
+        uint256 borrower_paid;
+    }
+    mapping(uint256 =>borrower_details) public borrower_details_map; //loan_ids
+    uint256 public asset_ids;
+    function add_loan(uint256 _borrower_id,uint256 _loan_amount, uint256 _interest_rate, uint256 _loan_duration, bytes _asset_details, uint256 _asset_amount, uint256 _borrower_paid) public payable returns(uint256,uint256)
+    {
+        require(issuer == msg.sender);
+        loan_ids += 1;
+        asset_ids += 1;
+        borrower_details_map[loan_ids].borrower_id = _borrower_id;
+        borrower_details_map[loan_ids].loan_amount = _loan_amount;
+        borrower_details_map[loan_ids].interest_rate = _interest_rate;
+        borrower_details_map[loan_ids].loan_duration = _loan_duration;
+        borrower_details_map[loan_ids].asset_id = asset_ids;
+        borrower_details_map[loan_ids].asset_details = _asset_details;
+        borrower_details_map[loan_ids].asset_amount = _asset_amount;
+        borrower_details_map[loan_ids].borrower_paid = _borrower_paid;
+        
+        return (loan_ids,asset_ids);
+    }
+    
+    function update_loan(uint256 _loan_id, uint256 _amount,uint256 _pool_id,uint256 _options,uint256 spv_id,uint256 inv_id) public payable returns(bool)
+    {
+        require(issuer == msg.sender);
+        borrower_details_map[_loan_id].borrower_paid += _amount;
+        //0 unsold  1 spv  2 inves
+        if(_options == 0)
+        {
+            return true;
+        }
+        else if(_options == 1) //spv
+        {
+            spv_details[spv_id].gain_amount += _amount;
+            return true;
+        }
+        else if(_options == 2)
+        {
+            uint256 share = (20*_amount)/100;
+            spv_details[spv_id].gain_amount += share;
+            share = (80*_amount)/100;
+            investor_details[inv_id].gain_amount += share;
+            return true;
+        }
+        return true;
+    }
+    
+    uint256 public pool_ids;
+    struct pool
+    {
+        uint256[] loan_ids;  
+        uint pool_value;
+        bool is_sold;
+    }
+    
+    mapping(uint=>pool) public pool_details; //pool_ids
+    function show_loanids_of_pool(uint256 _pool_id) public constant returns(uint256[])
+    {
+        return pool_details[_pool_id].loan_ids;
+    }
+    function create_pool(uint256[] _loan_ids,uint256 _value) public payable returns (uint256)
+    {
+        require(issuer == msg.sender);
+        pool_ids += 1;
+        pool_details[pool_ids].loan_ids = _loan_ids;
+        pool_details[pool_ids].pool_value = _value;
+    
+        return pool_ids;
+    }
+    
+    uint public spv_ids;
+    struct spv
+    {
+        address spv_address;
+        uint256 gain_amount;
+    }
+    mapping(uint256=>spv) public spv_details; //spv_ids
+    mapping(address => uint256) public spv_id_get;
+    function register_spv() public payable returns (uint256)
+    {
+        spv_ids += 1;
+        spv_details[spv_ids].spv_address = msg.sender;
+        spv_id_get[msg.sender] = spv_ids;
+        return spv_ids;
+    }
+  
+    mapping(uint256 => mapping(uint256 => bool)) public is_owned_spv; //spv_ids,_pool_id
+    mapping(uint256 => uint256) public spv_id_by_pool_id;//pool_ids,spv_id
+    function spv_buy_pool(uint256 _pool_id) public payable returns(bool)
+    {
+        require(pool_details[_pool_id].pool_value == msg.value);
+        uint256 _spv_id = spv_id_get[msg.sender];
+        pool_details[_pool_id].is_sold = true;
+        is_owned_spv[_spv_id][_pool_id] = true;
+        // pool_sale_map[_pool_id].buy_time = now;
+        spv_id_by_pool_id[_pool_id] = _spv_id;
+        
+        return true;
+    }
+    
+    uint public investor_ids;
+     
+    struct investor
+    {
+        address investor_address;
+        uint256 gain_amount;
+    }
+    mapping(uint=>investor) public investor_details;
+    mapping(address => uint256) public investor_id_get;
+    mapping(uint256 => mapping(uint256 => bool)) public is_owned_investor; //inv,_pool_id
+    function register_investor() public payable returns(uint256)
+    {
+        investor_ids++;
+        investor_details[investor_ids].investor_address = msg.sender;
+        investor_id_get[msg.sender] = investor_ids;
+        return investor_ids;
+    }
+    
+    function investor_purchase(uint256 _pool_id) public payable returns (bool) 
+    {
+        require(pool_details[_pool_id].pool_value == msg.value);
+        uint256 _investor_id = investor_id_get[msg.sender];
+        is_owned_investor[_investor_id][_pool_id] = true;
+        uint256 spv_id = spv_id_by_pool_id[_pool_id];
+        is_owned_spv[spv_id][_pool_id] = false;
+        // pool_sale_map[_pool_id].sale_time = now;
+        spv_details[spv_id].spv_address.transfer(msg.value);
+        return true;
+    }
+    event transfer(address _from, address _to, uint256 _amount);
+    function issuer_withdraw(uint256 _amount) public payable returns(bool)
+    {
+        require(msg.sender == issuer);
+        require(address(this).balance >= _amount);
+        issuer.transfer(_amount);
+        emit transfer(address(this), issuer, _amount);
+        
+        return true;
+    }
+    
+    function contract_balance() public constant returns(uint256)
+    {
+        return address(this).balance;
+    }
+    
+    // struct pool_time
+    // {
+    //     uint256 buy_time;
+    //     uint256 sale_time;
+    // }
+    // mapping(uint256 => pool_time) public pool_sale_map;
+    
+    // function current_time() public constant returns(uint256)
+    // {
+    //     return now;
+    // }
+    
+}

@@ -1,0 +1,124 @@
+<br>
+<br>
+<div class="tab-content">
+
+<div class="tab-pane fade in show active" role="tabpanel">
+<!-- <div class="container-fluid tab-content"> -->
+  <div class="row ">
+  <div class="col-sm-3">
+    <div class="row">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-10">
+          <h3><b>Purchase Pools</b></h3><br>
+          <div class="text-input">
+                <div class="group">      
+                    <input type="text" id="id1"  #poolid required>
+                    <span class="highlight"></span>
+                    <span class="bar"></span>
+                    <label > Enter Pool ID</label>
+                  </div>
+              </div>
+         
+            
+            <div class="col-sm-6">
+              <br>
+                <button class="btn btn-primary" (click)="purchasepool(poolid.value)">Purchase</button>
+              </div>
+      </div>
+    </div>
+    
+  </div>
+ 
+
+<div class="col-sm-2">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+            <h4><b>Purchased Pools</b></h4><br>
+            <table class="table" style="overflow-y:auto;display:block;height:250px;width:165px">
+                <thead class="tablecolor">
+                  <tr>
+                    <th>Pool ID</th>
+                    <th>Pool Value</th>
+                  </tr>
+                </thead>
+                <tbody id="purchasedpools">
+                    <tr *ngFor="let pool of purchased_pools">
+                        <td>{{ pool.id }}</td>
+                        <td>{{ pool.value }}</td>
+                     </tr>
+                 </tbody>
+              </table>  
+        </div>
+      </div>
+    
+</div>
+
+
+  <div class="col-sm-2">
+      <div class="row">
+          <div class="col-sm-2"></div>
+          <div class="col-sm-10">
+              <h4><b>Available Pools</b></h4><br>
+              <table class="table" style="overflow-y:auto;display:block;height:250px;width:165px">
+                 <thead class="tablecolor">
+                   <tr>
+                     <th>Pool ID</th>
+                     <th>Pool Value</th>                
+                   </tr>
+                 </thead>
+                 <tbody id="availablepools">
+                     <tr *ngFor="let pool of available_pools" [ngSwitch]="pool.status">
+                         <td>{{ pool.id }}</td>
+                         <td>{{ pool.value }}</td>
+                         <td *ngSwitchCase='false'>Unsold</td>  
+                      </tr>
+                  </tbody>
+               </table>
+          </div>
+        </div>
+          
+  </div>
+
+  
+  <div class="col-sm-2">
+      <div class="row">
+          <div class="col-sm-2"></div>
+          <div class="col-sm-10">
+              <h4><b>Loans of Pool</b></h4><br>
+              <table class="table" style="overflow-y:auto;display:block;height:250px;width:165px">
+          <thead class="tablecolor">
+            <tr><th>Pool Id</th><th>Loan Ids</th></tr>
+          </thead>
+          <tbody>
+            <tr *ngFor = "let obj of loans_of_pool">
+              <td>{{obj.poolid}}</td>
+              <td>{{obj.loanids}}</td>
+            </tr>
+          </tbody>
+        </table>
+          </div>
+        </div>
+      
+    </div>
+
+    <div class="col-sm-2">
+      <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+            <h4 style="text-align:center"><b>Amount Gained</b></h4><br>
+        <h1 style="text-align:center;color:green">Rs. {{spv_gain_amount}}</h1>
+        </div>
+      </div>
+      
+      </div>
+  </div>
+</div>
+</div>
+<ngx-spinner
+bdColor="rgba(51,51,51,0.8)"
+size="medium"
+color="#fff"
+loadingText="Transaction in process..."
+type="ball-scale-multiple">
+</ngx-spinner>

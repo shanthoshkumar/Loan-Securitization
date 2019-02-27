@@ -1,0 +1,116 @@
+<div class="container-fluid">
+  <br><br>
+  <div class="row">
+      <div class="col-sm-12">
+          <blockquote class="blockquote bq-primary">
+              <p class="bq-title">Note:</p>
+              <p>You can also enter multiple Borrower Names &nbsp;<strong>(ex:- Kumar,Kannan,Kishore)</strong>&nbsp;&nbsp;<br>(or)&nbsp;&nbsp;You can Upload a csv file&nbsp;<strong>(ex:- File.csv)</strong></p>            
+              <br>
+            </blockquote>
+      </div>
+  </div>
+  <br>
+  <div class="row">
+      <div class="col-sm-3">
+          <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10">
+                <h4><b>Borrower Details</b></h4><br>
+                <table class="table" style="overflow-y:auto;display:block;height:300px;width:195px;">
+                    <thead class="tablecolor">
+                      <tr>
+                        <th>Borrower ID</th>
+                        <th>Borrower Name</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let borrower of borrowerlist" >
+                        <td>{{ borrower.borrowerid }}</td>
+                        <td>{{ borrower.borrowername }}</td>
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+          </div>
+                
+        </div>
+    <div class="col-sm-3">
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10">
+                <h4><b>Bank Details</b></h4><br>
+                <table class="table" style="overflow-y:auto;display:block;height:300px;width:180px;">
+                    <thead class="tablecolor">
+                      <tr>
+                        <th>Bank ID</th>
+                        <th>Bank Name</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let bank of banklist" >
+                        <td>{{ bank.bankid }}</td>
+                        <td>{{ bank.bankname }}</td>
+                      </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-4"></div>
+            
+        </div>
+            
+    </div>
+    <div class="col-sm-6">      
+<div class="row">
+  <div class="col-sm-6">
+      <h3><strong>Borrower Registration</strong></h3><br><br>
+     
+      <div class="col-sm-12">
+        <div class="group">      
+          <input class="input" type="text" id="id1"   #brwrname required>
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label >Enter Borrower Name</label>
+        </div>
+      </div>
+      <div class="col-sm-12"> 
+        <div class="group">      
+            <input class="input" type="text" id="id2"   #bankid required>
+            <span class="highlight"></span>
+            <span class="bar"></span>
+            <label>Enter Bank ID</label>
+        </div>
+      </div> 
+      <div class="col-sm-12"> 
+        <button class="btn btn-primary" (click)="get_borrower_id(brwrname.value,bankid.value)">Register</button>
+        <br><br>
+        </div>
+        
+        <br>  
+  </div>
+  <div class="col-sm-6">                                           
+             <h3><strong>Upload a File(.csv)</strong></h3><br><br>  
+             <div class="group">      
+                <input class="input" type="text" id="id3"  #bankiid required>
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Enter Bank ID</label>
+            </div>
+            <br>
+            <div class="col-sm-6">
+                <input type="file" class="btn btn-primary" id="fileUpload"  class="form-control" (change)="onChange($event,bankiid.value)" accept=".csv" required />      
+            </div>
+            
+          
+  </div>
+</div>            
+    </div>  
+  </div>
+</div>
+<ngx-spinner
+bdColor="rgba(51,51,51,0.8)"
+size="medium"
+color="#fff"
+loadingText="Transaction in process..."
+type="ball-scale-multiple">
+
+</ngx-spinner>

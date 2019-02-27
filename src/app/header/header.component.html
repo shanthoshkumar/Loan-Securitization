@@ -1,0 +1,62 @@
+<mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark indigo">
+       
+
+    <links>
+ 
+        <ul class=" nav nav-tabs navbar-nav mr-auto ">
+              
+                <li class="nav-item " *ngIf="!check_key">
+                        <a class="nav-link waves-light"  routerLink="/login" mdbWavesEffect>LOGIN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="caret"></span></a>
+                    </li>
+
+                   
+                 
+
+            <li class="nav-item " *ngIf="check_key">
+                    
+                <a class="nav-link waves-light " id="homeid" routerLink="/home" mdbWavesEffect>HOME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="caret"></span></a>
+            </li>
+            
+              <!-- Dropdown -->
+              <li  *ngIf="check_key" id="dropid" class="nav-item dropdown" dropdown >
+                <a  dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light " role="tab" mdbWavesEffect>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ISSUER<span class="caret"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                <div *dropdownMenu  class="dropdown-menu dropdown dropdown-primary" role="menu">              
+                    <a class="dropdown-item waves-light  " mdbWavesEffect href="#" routerLink="/addbank">Add Bank</a>
+                    <a class="dropdown-item waves-light" mdbWavesEffect href="#" routerLink="/addborrower">Add Borrower</a>
+                    <a class="dropdown-item waves-light" mdbWavesEffect href="#" routerLink="/addloan">Add Loan</a>
+                    <a class="dropdown-item waves-light" mdbWavesEffect href="#" routerLink="/updateloan">Update Loan</a>
+                    <a class="dropdown-item waves-light" mdbWavesEffect href="#" routerLink="/createpack">Create Pool</a>
+                    <a class="dropdown-item waves-light" mdbWavesEffect href="#" routerLink="/withdraw">Withdraw</a>                    
+                </div>
+            </li>
+
+            <li  *ngIf="check_key" id="spvid" class="nav-item " role="tab">
+                    <a class="nav-link waves-light " data-toggle="tab"   routerLink="/spv" mdbWavesEffect>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SPV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="caret"></span></a>
+                </li>
+                <li *ngIf="check_key" id="investorid" class="nav-item " role="tab">
+                        <a class="nav-link waves-light"  data-toggle="tab" routerLink="/investor" mdbWavesEffect>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INVESTOR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="caret"></span></a>
+                    </li>
+
+                    <li  id="liid" >
+                        <!-- <font color="white">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" class="form-control" value=ETH:{{balance}} placeholder="Balance"readonly/></font> -->
+                </li>
+
+        </ul>
+        <ul  class="nav navbar-nav navbar-right">
+             
+               
+              
+
+            <li  *ngIf="check_key" id="signout" class="nav-item ">
+                <a class="nav-link waves-light"  (click)="sign_out()"  mdbWavesEffect>
+                    <i class="fa fa-sign-out" aria-hidden="true"></i>
+                    SignOut<span class="caret"></span></a>
+            </li>
+          </ul>
+
+    </links>
+
+
+</mdb-navbar>
+
